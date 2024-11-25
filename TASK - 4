@@ -1,0 +1,18 @@
+import tensorflow as tf
+from tensorflow.keras.datasets import imdb
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, GRU, LSTM, Dense
+
+max_features = 10000
+maxlen = 500
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_features)
+
+x_train = pad_sequences(x_train, maxlen=maxlen)
+x_test = pad_sequences(x_test, maxlen=maxlen)
+
+gru_model = Sequential([Embedding(max_features, 128, input_length=maxlen),GRU(128, return_sequences=True),GRU(128),Dense(1, activation='sigmoid')])
+gru_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+gru_model.fit(x_train, y_train, epochs=10, batch_size=32, validation_split=0.2)
+gru_loss, gru_accuracy = gru_model.evaluate(x_test, y_test)
+print(f'GRU Test Accuracy: {gru_accuracy:.2f}')

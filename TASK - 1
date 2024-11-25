@@ -1,0 +1,19 @@
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import Perceptron
+from sklearn.metrics import accuracy_score
+
+iris = load_iris()
+x=iris.data
+y=iris.target
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=1)
+
+sc=StandardScaler()
+xtr=sc.fit_transform(x_train)
+xte=sc.transform(x_test)
+
+ppn=Perceptron(max_iter=40,eta0=0.1,random_state=1)
+ppn.fit(xtr,y_train)
+y_pred=ppn.predict(xte)
+print(accuracy_score(y_test,y_pred))
